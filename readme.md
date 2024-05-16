@@ -1,16 +1,14 @@
-Untuk implementasi RTBH di IXP Manager, sebelumnya anda harus membuat Skinning di IXP Mangager terlebih dahulu.
-Skinning ini dimaksudkan untuk menempatkan template yang sudah dimodifikasi.
-
-Dokumentasi mengenai skinning di IXP Manager di link berikut : https://docs.ixpmanager.org/features/skinning/
+- [x] Untuk implementasi RTBH di IXP Manager, sebelumnya anda harus membuat Skinning di IXP Mangager terlebih dahulu.
+Skinning ini dimaksudkan untuk menempatkan template yang sudah dimodifikasi. Dokumentasi mengenai skinning di IXP Manager di link berikut : https://docs.ixpmanager.org/features/skinning/
 
 1. Copy file /srv/ixpmanager/resources/views/api/v4/router/server/bird2/community-filtering-definitions.foil.php ke folder target skinning yang sudah dibuat.
 2. Edit File $skinfolder/community-filtering-definitions.foil.php tambahkan baris beriikut dibawah line # Informational prefixes :
-
+```diff
     define IXP_BLACKHOLE = ( routeserverasn, 65535, 666 );
-
+```
 3. Copy /srv/ixpmanager/resources/views/api/v4/router/server/bird2/neighbors.foil.php ke folder target skinning
 4. Edit $skinfolder/neighbors.foil.php, replace policy # Filter Small Prefix dengan 
-
+```diff
     # Filter small prefixes & detection RTBH
 <?php if( $t->router->protocol == 6 ): ?>
     if ( net ~ [ ::/0{<?= config( 'ixp.irrdb.min_v6_subnet_size', 48 ) == 128 ? 128 : config( 'ixp.irrdb.min_v6_subnet_size', 48 ) + 1 ?>,128} ] ) then {	
@@ -25,9 +23,9 @@ Dokumentasi mengenai skinning di IXP Manager di link berikut : https://docs.ixpm
 			accept;
 		}
 	}
-
+```
 5. Masih di file yang sama, edit juga pada bagian filter f_export_as?  . ganti nexthopnya dengan ip address blackhole
-
+```diff
 filter f_export_as<?= $int['autsys'] ?>
 {
 
@@ -61,5 +59,5 @@ if ( (65535, 666) ~ bgp_community ) then {
 
 }
 
-
+```
 
